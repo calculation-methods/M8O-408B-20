@@ -1,10 +1,10 @@
 ## Лабораторные работы по численным методам
 
 ### Задания
-1. [Лабораторная работа №1](tasks/numeric-methods-lab-1.zip)
-2. [Лабораторная работа №2](tasks/numeric-methods-lab-2.zip)
-3. [Лабораторная работа №3](tasks/numeric-methods-lab-3.zip)
-4. [Лабораторная работа №4](tasks/numeric-methods-lab-4.zip)
+1. [Лабораторная работа №5](tasks/numeric-methods-lab-5-1.zip)
+2. [Лабораторная работа №6](tasks/numeric-methods-lab-6-2.zip)
+3. [Лабораторная работа №7](tasks/numeric-methods-lab-7-3.zip)
+4. [Лабораторная работа №8](tasks/numeric-methods-lab-8-4.zip)
 
 ### Распределение вариантов
 ФИО                            | Вариант
