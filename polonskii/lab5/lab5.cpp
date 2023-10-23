@@ -1,5 +1,5 @@
 /*
-Полонский Кирилл, М8О-408Б-20. Вариант 10 (20-й по списку)
+Polonskii Kirill, M8O-408B-20. Task 10 (20th in the group list)
 */
 #include <iostream>
 #include <fstream>
@@ -7,29 +7,29 @@
 #include <numbers>
 #include <string>
 
-// Константы варианта 10
-const double ALPHA0 = 1.0; // коэффициент при du/dx(0, t)
-const double BETA0 = 1.0; // коэффициент при u(0, t)
-const double ALPHA1 = 1.0; // коэффициент при du/dx(pi, t)
-const double BETA1 = 1.0; // коэффициент при u(pi, t)
+// Constants of task 10
+const double ALPHA0 = 1.0; // coeff before du/dx(0, t)
+const double BETA0 = 1.0; // coeff before u(0, t)
+const double ALPHA1 = 1.0; // coeff before du/dx(pi, t)
+const double BETA1 = 1.0; // coeff before u(pi, t)
 const double L = 3.14159265359;
 
-// Граничные условия
+// Boundary conditions
 double phi0(double t);
 double phi1(double t);
-// Начальное условие
+// Initial condition
 double psi(double x);
-// Аналитическое решение
+// Analytic solution
 double analSol(double x, double t);
-// Явная конечно-разностная схема
+// Explicit finite difference
 std::vector<std::vector<double>> explicitMethod(int approx);
 void explicit2Points1Order(std::vector<std::vector<double>>& U);
 void explicit3Points2Order(std::vector<std::vector<double>>& U);
 void explicit2Points2Order(std::vector<std::vector<double>>& U);
-// Метод прогонки
+// Thomas algorithm
 double tridiagonalAlgo(std::vector<double>& a, std::vector<double>& b, std::vector<double>& c, std::vector<double>& d,
 	std::vector<double>& x, int step, double prevP, double prevQ);
-// Неявная конечно-разностная схема
+// Implicit finite difference
 std::vector<std::vector<double>> implicitMethod(int approx);
 void implicit2Points1Order(std::vector<std::vector<double>>& U, 
 	std::vector<double>& lower, std::vector<double>& main, std::vector<double>& upper,
@@ -40,9 +40,9 @@ void implicit3Points2Order(std::vector<std::vector<double>>& U,
 void implicit2Points2Order(std::vector<std::vector<double>>& U,
 	std::vector<double>& lower, std::vector<double>& main, std::vector<double>& upper,
 	std::vector<double>& coeffs, bool getA, int k);
-// Схема Кранка-Николсона
+// Crank-Nicolson methodР°
 std::vector<std::vector<double>> CrankNicolsonMethod();
-// Функция погрешности
+// Error function
 std::vector<double> getError(std::vector<std::vector<double>>& U);
 
 double a, b, c;
@@ -131,23 +131,23 @@ int main() {
 	file.close();
 }
 
-// Граничные условия
+// Boundary conditions
 double phi0(double t) {
 	return std::exp((c - a) * t) * (std::cos(b * t) + std::sin(b * t));
 }
 double phi1(double t) {
 	return -phi0(t);
 }
-// Начальное условие
+// Initial condition
 double psi(double x) {
 	return std::sin(x);
 }
-// Аналитическое решение
+// Analytic solution
 double analSol(double x, double t) {
 	return std::exp((c - a) * t) * std::sin(x + b * t);
 }
 
-// Явная конечно-разностная схема
+// Explicit finite difference
 std::vector<std::vector<double>> explicitMethod(int approx) {
 	std::vector<std::vector<double>> U(K, std::vector<double>(N, 0.0));
 	for (int j = 0; j < N; ++j) {
@@ -196,7 +196,7 @@ void explicit2Points2Order(std::vector<std::vector<double>>& U) {
 	}
 }
 
-// Метод прогонки
+// Thomas algorithm
 double tridiagonalAlgo(std::vector<double>& a, std::vector<double>& b, std::vector<double>& c, std::vector<double>& d,
 	std::vector<double>& x, int step, double prevP, double prevQ) {
 	if (step == a.size()) {
@@ -208,13 +208,13 @@ double tridiagonalAlgo(std::vector<double>& a, std::vector<double>& b, std::vect
 	return x[step];
 }
 
-// Неявная конечно-разностная схема
+// Implicit finite difference
 std::vector<std::vector<double>> implicitMethod(int approx) {
 	std::vector<std::vector<double>> U(K, std::vector<double>(N, 0.0));
 	for (int j = 0; j < N; ++j) {
 		U[0][j] = psi(j * h);
 	}
-	// Получить один раз три диагонали в матрице A
+	// get only once 3 diagonals in matrix A
 	std::vector<double> lower(N);
 	std::vector<double> main(N);
 	std::vector<double> upper(N);
@@ -248,7 +248,7 @@ void implicit2Points1Order(std::vector<std::vector<double>>& U,
 	double aj = a * tau / (h * h) - tau * b / 2.0 / h;
 	double bj = tau * (c - 2.0 * a / (h * h)) - 1.0;
 	double cj = a * tau / (h * h) + tau * b / 2.0 / h;
-	if (getA) { // получить три диагонали в матрице A
+	if (getA) { // get only once 3 diagonals in matrix A
 		double b0 = BETA0 - ALPHA0 / h;
 		double c0 = ALPHA0 / h;
 		double aN = -ALPHA1 / h;
@@ -265,7 +265,7 @@ void implicit2Points1Order(std::vector<std::vector<double>>& U,
 		main[N - 1] = bN;
 		upper[N - 1] = 0.0;
 	}
-	else { // получить вектор свободных коэффициентов в СЛАУ
+	else { // get system coefficients
 		coeffs[0] = phi0(tau * (k + 1));
 		coeffs[N - 1] = phi1(tau * (k + 1));
 		for (int j = 1; j < N - 1; ++j) {
@@ -279,7 +279,7 @@ void implicit3Points2Order(std::vector<std::vector<double>>& U,
 	double aj = a * tau / (h * h) - tau * b / 2.0 / h;
 	double bj = tau * (c - 2.0 * a / (h * h)) - 1.0;
 	double cj = a * tau / (h * h) + tau * b / 2.0 / h;
-	if (getA) { // получить три диагонали в матрице A
+	if (getA) { // get only once 3 diagonals in matrix A
 		double a0 = BETA0 - 3.0 * ALPHA0 / h / 2.0;
 		double b0 = 2.0 * ALPHA0 / h;
 		double c0 = -ALPHA0 / h / 2.0;
@@ -299,7 +299,7 @@ void implicit3Points2Order(std::vector<std::vector<double>>& U,
 		main[N - 1] = bN;
 		upper[N - 1] = cN;
 	}
-	else { // получить вектор свободных коэффициентов в СЛАУ
+	else { // get system coefficients
 		coeffs[0] = phi0(tau * (k + 1));
 		coeffs[N - 1] = phi1(tau * (k + 1));
 		for (int j = 1; j < N - 1; ++j) {
@@ -313,7 +313,7 @@ void implicit2Points2Order(std::vector<std::vector<double>>& U,
 	double aj = a * tau / (h * h) - tau * b / 2.0 / h;
 	double bj = tau * (c - 2.0 * a / (h * h)) - 1.0;
 	double cj = a * tau / (h * h) + tau * b / 2.0 / h;
-	if (getA) { // получить три диагонали в матрице A
+	if (getA) { // get only once 3 diagonals in matrix A
 		double b0 = 2.0 * a / h + h / tau - h * c - BETA0 / ALPHA0 * (2.0 * a - b * h);
 		double c0 = -2.0 * a / h;
 		double aN = -2.0 * a / h;
@@ -331,7 +331,7 @@ void implicit2Points2Order(std::vector<std::vector<double>>& U,
 		main[N - 1] = bN;
 		upper[N - 1] = 0;
 	}
-	else { // получить вектор свободных коэффициентов в СЛАУ
+	else { // get system coefficients
 		coeffs[0] = h / tau * U[k][0] - phi0(tau * (k + 1.0)) * (2.0 * a - b * h) / ALPHA0;
 		coeffs[N - 1] = h / tau * U[k][N - 1] + phi1(tau * (k + 1.0)) * (2.0 * a + b * h) / ALPHA1;
 		for (int j = 1; j < N - 1; ++j) {
@@ -340,7 +340,7 @@ void implicit2Points2Order(std::vector<std::vector<double>>& U,
 	}
 }
 
-// Схема Кранка-Николсона
+// Crank-Nicolson methodР°
 std::vector<std::vector<double>> CrankNicolsonMethod() {
 	std::vector<std::vector<double>> U(K, std::vector<double>(N, 0.0));
 	for (int j = 0; j < N; ++j) {
@@ -349,7 +349,7 @@ std::vector<std::vector<double>> CrankNicolsonMethod() {
 	double aj = sigma * a * tau / (h * h) - tau * b / 2.0 / h;
 	double bj = tau * (c - sigma * 2.0 * a / (h * h)) - 1.0;
 	double cj = sigma * a * tau / (h * h) + tau * b / 2.0 / h;
-	// Получить один раз три диагонали в матрице A
+	// get only once 3 diagonals in matrix A
 	std::vector<double> lower(N);
 	std::vector<double> main(N);
 	std::vector<double> upper(N);
@@ -384,7 +384,7 @@ std::vector<std::vector<double>> CrankNicolsonMethod() {
 	return U;
 }
 
-// Функция погрешности
+// Error function
 std::vector<double> getError(std::vector<std::vector<double>>& U) {
 	std::vector<double> error(K, 0.0);
 	for (int k = 0; k < K; ++k) {
