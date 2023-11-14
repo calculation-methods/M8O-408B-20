@@ -2,3 +2,6 @@ main
 *.out
 *.txt
 *.ipynb
+*.out
+test*
+main
