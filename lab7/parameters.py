@@ -51,3 +51,4 @@ def phi_4(x):
 
 def analytical_solution(x, y):
     return np.exp(-x - y) * np.cos(x) * np.cos(y)
+    
