@@ -20,5 +20,3 @@ if __name__ == "__main__":
 
     plot_analytical_solution(tt*hx)
     plt.show()
-
-
