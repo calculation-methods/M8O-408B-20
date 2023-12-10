@@ -29,10 +29,3 @@ def plot_seidel(seidel, seidel_iters, seidel_error):
 def plot_upper_relaxation(upper_relaxation, upper_relaxation_iters, upper_relaxation_error):
     ax[0].plot(X, upper_relaxation[:, tt], label=f"upper relaxation method (iters = {upper_relaxation_iters})", color="orange", linewidth=2)
     ax[1].plot(upper_relaxation_error, label="upper relaxation error", color="orange", linewidth=2)
-
-
-
-
-
-
-
