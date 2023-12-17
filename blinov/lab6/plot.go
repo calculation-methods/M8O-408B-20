@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"math"
+
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
-	"image/color"
-	"math"
 )
 
 func plotResults(solutions map[string]struct {
@@ -21,7 +22,7 @@ func plotResults(solutions map[string]struct {
 	p := plot.New()
 	p.Title.Text = "Solution at Time " + fmt.Sprintf("%.2f", time)
 	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Solution"
+	p.Y.Label.Text = "T"
 
 	for methodName, solution := range solutions {
 		pts := make(plotter.XYs, len(x))
