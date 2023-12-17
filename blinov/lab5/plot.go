@@ -22,7 +22,7 @@ func plotResults(solutions map[string]struct {
 	p := plot.New()
 	p.Title.Text = "Solutions"
 	p.X.Label.Text = "X"
-	p.Y.Label.Text = "Solution"
+	p.Y.Label.Text = "T"
 	p.Add(plotter.NewGrid())
 
 	for methodName, solution := range solutions {
