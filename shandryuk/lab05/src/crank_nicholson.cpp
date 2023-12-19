@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <vector>
+#include <Eigen/Dense>
 
 using namespace std;
+using namespace Eigen;
 
 const double pi = 3.141592653589793;
 
@@ -30,69 +33,44 @@ int main() {
     ofstream outputFile("results_cn.txt");
 
     // Инициализация сетки и начальных условий
-    double** u = new double*[Nx];
-    for (int i = 0; i < Nx; ++i) {
-        u[i] = new double[Nt];
-    }
+    MatrixXd u(Nx, Nt);
 
     // Инициализация начальных условий
     for (int i = 0; i < Nx; ++i) {
         double x = i * h;
-        u[i][0] = sin(x);
+        u(i, 0) = sin(x);
     }
 
     // Схема Кранка-Николсона
     double alpha = a * k / (2 * h * h);
     double beta = c * k / 2;
 
+    // Создание трехдиагональной матрицы для решения системы линейных уравнений
+    MatrixXd A(Nx, Nx);
+    A.setZero();
+    A.diagonal().setConstant(1 + 2 * alpha - beta);
+    A.diagonal(1).setConstant(-alpha);
+    A.diagonal(-1).setConstant(-alpha);
+
     for (int j = 0; j < Nt - 1; ++j) {
+        VectorXd b(Nx);
+        b.setZero();
+
         double t = (j + 1) * k;
 
-        // Заполнение матрицы системы линейных уравнений
-        double** A = new double*[Nx];
-        for (int i = 0; i < Nx; ++i) {
-            A[i] = new double[Nx];
-        }
-
-        for (int i = 0; i < Nx; ++i) {
-            for (int l = 0; l < Nx; ++l) {
-                A[i][l] = 0.0;
-            }
-            A[i][i] = 1 + 2 * alpha - beta;
-            if (i > 0) {
-                A[i][i - 1] = -alpha;
-            }
-            if (i < Nx - 1) {
-                A[i][i + 1] = -alpha;
-            }
-        }
-
         // Заполнение вектора правой части
-        double* b = new double[Nx];
-        for (int i = 0; i < Nx; ++i) {
-            b[i] = u[i][j] + alpha * (u[i + 1][j] - 2 * u[i][j] + u[i - 1][j])
-                   + beta * (u[i + 1][j] + u[i - 1][j]);
+        for (int i = 1; i < Nx - 1; ++i) {
+            b(i) = u(i, j) + alpha * (u(i + 1, j) - 2 * u(i, j) + u(i - 1, j))
+                   + beta * (u(i + 1, j) + u(i - 1, j));
         }
 
-        // Решение системы линейных уравнений методом прогонки
-        for (int i = 1; i < Nx; ++i) {
-            double m = A[i][i - 1] / A[i - 1][i - 1];
-            A[i][i] -= m * A[i - 1][i];
-            b[i] -= m * b[i - 1];
-        }
+        // Решение системы линейных уравнений Ax = b
+        VectorXd x = A.fullPivLu().solve(b);
 
-        u[Nx - 1][j + 1] = b[Nx - 1] / A[Nx - 1][Nx - 1];
-
-        for (int i = Nx - 2; i >= 0; --i) {
-            u[i][j + 1] = (b[i] - A[i][i + 1] * u[i + 1][j + 1]) / A[i][i];
+        // Запись результатов
+        for (int i = 1; i < Nx - 1; ++i) {
+            u(i, j + 1) = x(i);
         }
-
-        // Очистка памяти
-        for (int i = 0; i < Nx; ++i) {
-            delete[] A[i];
-        }
-        delete[] A;
-        delete[] b;
     }
 
     // Запись результатов в файл
@@ -100,15 +78,9 @@ int main() {
         double t = j * k;
         for (int i = 0; i < Nx; ++i) {
             double x = i * h;
-            outputFile << x << " " << t << " " << u[i][j] << " " << analyticalSolution(x, t, a, c) << endl;
+            outputFile << x << " " << t << " " << u(i, j) << " " << analyticalSolution(x, t, a, c) << endl;
         }
     }
-
-    // Очистка памяти
-    for (int i = 0; i < Nx; ++i) {
-        delete[] u[i];
-    }
-    delete[] u;
 
     // Закрытие файла
     outputFile.close();
