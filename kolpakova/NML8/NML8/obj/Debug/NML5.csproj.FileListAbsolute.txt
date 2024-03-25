@@ -1,0 +1,10 @@
+C:\Users\Олег\source\repos\NML5\NML5\bin\Debug\NML5.exe.config
+C:\Users\Олег\source\repos\NML5\NML5\bin\Debug\NML5.exe
+C:\Users\Олег\source\repos\NML5\NML5\bin\Debug\NML5.pdb
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.csproj.AssemblyReference.cache
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.Form1.resources
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.Properties.Resources.resources
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.csproj.GenerateResource.cache
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.csproj.CoreCompileInputs.cache
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.exe
+C:\Users\Олег\source\repos\NML5\NML5\obj\Debug\NML5.pdb
